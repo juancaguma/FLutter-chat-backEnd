@@ -40,15 +40,15 @@ const crearUsuario= async (req,res=response)=>{
 const login= async (req,res=response)=>{
     const {email,pass} = req.body;
     try {
-        const usuarioDB= await Usuario.findOne({email});
+        const usuario= await Usuario.findOne({email});
         
-        if (!usuarioDB) {
+        if (!usuario) {
             return res.status(404).json({
                 ok: false,
                 msg:'Email no encontrado'
             });
         }
-        const validaPass= bcrypt.compareSync(pass,usuarioDB.pass);
+        const validaPass= bcrypt.compareSync(pass,usuario.pass);
         if (!validaPass) {
             return res.status(400).json({
                 ok: false,
@@ -57,11 +57,11 @@ const login= async (req,res=response)=>{
         }
 
         //Generar el JWT 
-        const token= await generarJWT(usuarioDB.id);
+        const token= await generarJWT(usuario.id);
         res.status(200).json({
             ok:true,
-            msg: 'Crear usuario!!!',
-            usuarioDB,
+            msg: 'Usuario logeado!!!',
+            usuario,
             token
         });
 
@@ -76,14 +76,13 @@ const login= async (req,res=response)=>{
 
 const renewToken= async(req,res=response)=>{
     const uid=req.uid;
-    const tokenNew= await generarJWT(uid);
-    const usuarioDB= await Usuario.findById(uid);
+    const token= await generarJWT(uid);
+    const usuario= await Usuario.findById(uid);
 
     res.status(200).json({
         ok:true,
-        msg: 'Token renovado',
-        usuarioDB,
-        tokenNew
+        usuario,
+        token
     });
 }
 
