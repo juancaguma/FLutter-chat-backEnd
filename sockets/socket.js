@@ -13,6 +13,14 @@ io.on('connection', client => {
     if (!valido) {return client.disconnect();}
     //Cliente autenticado
     usuarioConectado(uid);
+
+    //ingresar al usuario a una sala
+    client.join(uid);
+    // client.to(uid).emit('');
+    client.on('mensaje-personal',(payload)=>{
+        console.log(payload);
+    });
+
     console.log('Cliente autenticado');
     client.on('disconnect', () => {
         usuarioDesconectado(uid);
