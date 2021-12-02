@@ -19,6 +19,8 @@ io.on('connection', client => {
     // client.to(uid).emit('');
     client.on('mensaje-personal',(payload)=>{
         console.log(payload);
+        io.to(payload.para).emit('mensaje-personal',payload);
+
     });
 
     console.log('Cliente autenticado');
